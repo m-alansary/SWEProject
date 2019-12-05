@@ -12,6 +12,9 @@
 #include <QStringList>
 #include <QSqlError>
 
+void databaseInitialization();
+
+
 class SQLiteClass
 {
 public:

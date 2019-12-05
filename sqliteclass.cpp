@@ -1,4 +1,5 @@
 #include "sqliteclass.h"
+#include "globalDbObject.h"
 
 SQLiteClass::SQLiteClass(QString dbName)
 {
@@ -135,5 +136,49 @@ int SQLiteClass::sql_close(){
     db.close();
     return 0;
 }
+
+void databaseInitialization(){
+    // Students table
+    QString students_table = "students";
+    QStringList students_columns = {"id","first_name","last_name", "academic_year", "birth_date",
+                                    "gendre", "address", "picture", "colledge_id", "department"};
+    QStringList students_types = {"INTEGER PRIMARY KEY AUTOINCREMENT", "TEXT", "TEXT", "INTEGER", "TEXT",
+                                  "TEXT", "TEXT", "TEXT", "TEXT PRIMARY KEY", "TEXT"};
+
+    // courses table
+    QString courses_table = "courses";
+    QStringList courses_columns = {"id","name"};
+    QStringList courses_types = {"INTEGER PRIMARY KEY AUTOINCREMENT", "TEXT"};
+
+    // courses  / students table
+    QString courses_students_table = "courses_students";
+    QStringList courses_students_columns = {"course_id",  "student_id"};
+    QStringList courses_students_types = {"INTEGER", "INTEGER"};
+
+    // staff memmbers table
+    QString staff_table = "staff_members";
+    QStringList staff_columns = {"id","first_name","last_name", "degree", "birth_date",
+                                    "gendre", "address", "picture", "colledge_id", "department"};
+    QStringList staff_types = {"INTEGER PRIMARY KEY AUTOINCREMENT", "TEXT", "TEXT", "INTEGER", "TEXT",
+                                  "TEXT", "TEXT", "TEXT", "TEXT PRIMARY KEY", "TEXT"};
+
+    // courses  / students table
+    QString courses_staff_table = "courses_staff_members";
+    QStringList courses_staff_columns = {"course_id",  "staff_member_id"};
+    QStringList courses_staff_types = {"INTEGER", "INTEGER"};
+
+    // creating tables
+    SQLiteDb.sql_create(students_table, students_columns, students_types);
+    SQLiteDb.sql_create(courses_table, courses_columns, courses_types);
+    SQLiteDb.sql_create(courses_students_table, courses_students_columns, courses_students_types);
+    SQLiteDb.sql_create(staff_table, staff_columns, staff_types);
+    SQLiteDb.sql_create(courses_staff_table, courses_staff_columns, courses_staff_types);
+}
+
+
+
+
+
+
 
 
