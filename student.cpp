@@ -63,23 +63,7 @@ void Student::deleteCourse(QString course_name) {
 }
 
 QVector<Student> Student::all() {
-    QSqlQuery query;
-    QSqlDatabase db;
-
-    db = QSqlDatabase::addDatabase("QSQLITE");
-
-    QString dbPath = QDir::currentPath();
-
-    dbPath += "/" + QString("db.sqlite");
-
-    qDebug() << dbPath;
-
-    db.setDatabaseName(dbPath);
-
-    if(!db.open()){
-        qDebug() << "Problem while opening the database";
-    }
-
+    QSqlQuery query = SQLiteDb.sql_getQuery();
 
     QVector<Student> students;
     Student temp;
@@ -108,44 +92,44 @@ QVector<Student> Student::all() {
         students.push_back(temp);
     }
 
-
-    db.close();
     return students;
 }
 
 bool Student::save(){
-    SQLiteDb.sql_select("*", students_table, "id = " + QString::number(getId()));
+    QString id_ = QString::number(getId());
+    SQLiteDb.sql_select("*", students_table, " id = " + id_);
     QSqlQuery query = SQLiteDb.sql_getQuery();
-    if(query.next()){
-        return true;
-    }
     QStringList values = {getFirstName(),  getLastName(), getAcademicYear(), getBirthDate(),
                           getGendre(), getAddress(), getPicture(), getCollegeId(),  getDepartment()};
+    if(query.next()){
+        SQLiteDb.sql_update(students_table, students_columns, values, "id = " + id_);
+
+        for(int i = 0; i < courses.size(); i++){
+            QString course_id = QString::number(courses[i].getId());
+            SQLiteDb.sql_select("*", "courses_students", " student_id = " + id_ + " AND course_id " + course_id);
+            query = SQLiteDb.sql_getQuery();
+            if(!query.next()){
+                SQLiteDb.sql_insert("courses_students", {"student_id", "courses_id"}, {id_, course_id});
+            }
+        }
+        return true;
+    }
     SQLiteDb.sql_insert(students_table, students_columns, values);
+    for(int i = 0; i < courses.size(); i++){
+        QString course_id = QString::number(courses[i].getId());
+        SQLiteDb.sql_insert("courses_students", {"student_id", "courses_id"}, {id_, course_id});
+    }
     return false;
 }
 
 void Student::delete1(){
-    SQLiteDb.sql_delete(students_table, "ID = " + QString::number(getId()));
+    QString student_id = QString::number(getId());
+    SQLiteDb.sql_delete(students_table, "id = " + student_id);
+    SQLiteDb.sql_delete("courses_students", "student_id = " + student_id);
 }
 
 Student Student::find(long long id) {
-    QSqlQuery query;
-    QSqlDatabase db;
-
-    db = QSqlDatabase::addDatabase("QSQLITE");
-
-    QString dbPath = QDir::currentPath();
-
-    dbPath += "/" + QString("db.sqlite");
-
-    qDebug() << dbPath;
-
-    db.setDatabaseName(dbPath);
-
-    if(!db.open()){
-        qDebug() << "Problem while opening the database";
-    }
+    QSqlQuery query = SQLiteDb.sql_getQuery();
 
     query.exec("SELECT * FROM students");
     QSqlQuery query1;
@@ -169,8 +153,6 @@ Student Student::find(long long id) {
         student.addCourse(Course::find(query1.value(1).toLongLong()).getName());
     }
 
-
-    db.close();
     return student;
 }
 

@@ -34,7 +34,7 @@ int SQLiteClass::sql_create(QString table, QStringList columns, QStringList type
     sql += temp + ");";
 
     if(!query.exec(sql)){
-        qDebug() << "error while creating";
+        qDebug() << "error while creating " + table;
     }
 
     return 0;
@@ -143,7 +143,7 @@ void databaseInitialization(){
     QStringList students_columns = {"id","first_name","last_name", "academic_year", "birth_date",
                                     "gendre", "address", "picture", "colledge_id", "department"};
     QStringList students_types = {"INTEGER PRIMARY KEY AUTOINCREMENT", "TEXT", "TEXT", "INTEGER", "TEXT",
-                                  "TEXT", "TEXT", "TEXT", "TEXT PRIMARY KEY", "TEXT"};
+                                  "TEXT", "TEXT", "TEXT", "TEXT", "TEXT"};
 
     // courses table
     QString courses_table = "courses";
@@ -160,7 +160,7 @@ void databaseInitialization(){
     QStringList staff_columns = {"id","first_name","last_name", "degree", "birth_date",
                                     "gendre", "address", "picture", "colledge_id", "department"};
     QStringList staff_types = {"INTEGER PRIMARY KEY AUTOINCREMENT", "TEXT", "TEXT", "INTEGER", "TEXT",
-                                  "TEXT", "TEXT", "TEXT", "TEXT PRIMARY KEY", "TEXT"};
+                                  "TEXT", "TEXT", "TEXT", "TEXT", "TEXT"};
 
     // courses  / students table
     QString courses_staff_table = "courses_staff_members";

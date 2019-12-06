@@ -17,6 +17,8 @@ int main(int argc, char *argv[]){
     qDebug() << "start";
     databaseInitialization();
 
+    /*
+
     SQLiteClass SQLiteDb2 = SQLiteClass("db.sqlite");
 
     QString  table = "staff";
@@ -42,7 +44,7 @@ int main(int argc, char *argv[]){
 
     SQLiteDb2.sql_close();
 
-    /*
+
     QSqlDatabase db;
     db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName("F:/Ansary/QTProjects/Database/db.sqlite");

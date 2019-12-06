@@ -34,6 +34,9 @@ public:
 
     static QVector<StaffMember> all();
     static StaffMember find(long long id);
+    QVector<StaffMember> where(QString column, QString value);
+    void delete1();
+    bool save();
 };
 
 #endif // STAFFMEMBER_H
